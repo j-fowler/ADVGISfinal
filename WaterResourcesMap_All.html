@@ -25,7 +25,20 @@
       padding: 0;
     }
   </style>
+<style>
+  .label {
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    margin-top: -1em;
+  }
 
+  .label div {
+    position: relative;
+    left: 0%;
+    text-shadow: 0px 2px 1px rgba(255,255,255,0.85);
+  }
+</style>
 </head>
 <body>
 Welcome to our interactive water resources map for North Carolina! </br>
@@ -40,13 +53,12 @@ Click on one of the stream segments or USGS station icons to bring up details ab
           zoom: 7
         });
 		
-        var esriImagery = L.esri.basemapLayer('Streets').addTo(map);
+        var esriImagery = L.esri.basemapLayer('Topographic').addTo(map);
 		
         var USGSgages = L.esri.featureLayer({
 		url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Environment/FeatureServer/3',
 		//where: "HUCODE = '03020201'",
-		minZoom: 10,
-		maxZoom: 13,
+		minZoom: 9,
 		}).addTo(map);
 		
         USGSgages.bindPopup(function(feature) {
@@ -55,14 +67,20 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 
 		var ncwatersheds = L.esri.featureLayer({
 			url: 'https://services.nconemap.gov/secure/rest/services/NC1Map_Watersheds/FeatureServer/0',
-			maxZoom: 12,
+			maxZoom: 10,
 			simplifyFactor: 1,
-			precision: 6,
-			//fields: ['BASIN'],
-			style: {
-			color: '#A9A9A9',
-			weight: 1
+			precision: 2,
+			style: function() {
+				return {
+				color: '#5B7CBA',
+				weight: 2
+				};
 			}
+			//fields: ['BASIN'],
+			//style: {
+			//color: '#A9A9A9',
+			//weight: 1
+			//}
 			//where: "BASIN = 'Neuse'",
 			//style:'opacity:0.5',
 		}).addTo(map);
@@ -77,7 +95,28 @@ Click on one of the stream segments or USGS station icons to bring up details ab
             return L.Util.template('<p>{AU_NAME}<br>{AU_DESCRIP}<br>{O_USR}</p>', feature.properties);
         });   
 		
-		    
+		var labels = {};
+
+		ncwatersheds.on('createfeature', function(e){
+			var id = e.feature.id;
+			var feature = ncwatersheds.getFeature(id);
+			var center = feature.getBounds().getCenter();
+			var label = L.marker(center, {
+				icon: L.divIcon({
+					iconSize: null,
+					className: 'label',
+					html: '<div>' + e.feature.properties.BASIN + '</div>'
+				})
+			}).addTo(map);
+			labels[id] = label;
+		});
+
+		ncwatersheds.on('addfeature', function(e){
+			var label = labels[e.feature.id];
+			if(label){
+				label.addTo(map);
+			}
+		});    
     </script>
 </body>
 </html>
