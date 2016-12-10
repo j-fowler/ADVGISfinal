@@ -25,25 +25,23 @@
       padding: 0;
     }
   </style>
-<style>
-  .label {
-    font-weight: 700;
-    text-transform: uppercase;
-    text-align: center;
-    margin-top: -1em;
-  }
 
-  .label div {
-    position: relative;
-    left: 0%;
-    text-shadow: 0px 2px 1px rgba(255,255,255,0.85);
-  }
-</style>
 </head>
 <body>
 Welcome to our interactive water resources map for North Carolina! </br>
 This demo version shows the all of the North Carolina river basins complete with stream networks and USGS gaging stations. </br>
-    <div id="map"></div>
+ <style>
+  #info-pane {
+    position: absolute;
+    top: 20px;
+    right: 10px;
+    z-index: 400;
+    padding: 1em;
+    background: white;
+  }
+</style>   
+	<div id="map"></div>
+	<div id="info-pane" class="leaflet-bar"></div>
 Map Tips:</br>
 Zoom in on a watershed of interest until streams and USGS gages pop up (zoom slow).</br>
 Click on one of the stream segments or USGS station icons to bring up details about the feature. </br>
@@ -67,8 +65,8 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 
 		var ncwatersheds = L.esri.featureLayer({
 			url: 'https://services.nconemap.gov/secure/rest/services/NC1Map_Watersheds/FeatureServer/0',
-			maxZoom: 10,
-			simplifyFactor: 1,
+			maxZoom: 9,
+			simplifyFactor: 0.5,
 			precision: 2,
 			style: function() {
 				return {
@@ -92,31 +90,25 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 		}).addTo(map);
 		
 		streams.bindPopup(function(feature) {
-            return L.Util.template('<p>{AU_NAME}<br>{AU_DESCRIP}<br>{O_USR}</p>', feature.properties);
+            return L.Util.template('<p>{AU_NAME}<br>{AU_DESCRIP}</p>', feature.properties);
         });   
 		
-		var labels = {};
+		var oldId;
 
-		ncwatersheds.on('createfeature', function(e){
-			var id = e.feature.id;
-			var feature = ncwatersheds.getFeature(id);
-			var center = feature.getBounds().getCenter();
-			var label = L.marker(center, {
-				icon: L.divIcon({
-					iconSize: null,
-					className: 'label',
-					html: '<div>' + e.feature.properties.BASIN + '</div>'
-				})
-			}).addTo(map);
-			labels[id] = label;
+		ncwatersheds.on('mouseout', function(e){
+			document.getElementById('info-pane').innerHTML = 'Hover to Inspect';
+			ncwatersheds.resetFeatureStyle(oldId);
 		});
 
-		ncwatersheds.on('addfeature', function(e){
-			var label = labels[e.feature.id];
-			if(label){
-				label.addTo(map);
-			}
-		});    
+		ncwatersheds.on('mouseover', function(e){
+			oldId = e.layer.feature.id;
+			document.getElementById('info-pane').innerHTML = e.layer.feature.properties.BASIN;
+			ncwatersheds.setFeatureStyle(e.layer.feature.id, {
+				color: '#9D78D2',
+				weight: 3,
+				opacity: 1
+			});
+		});
     </script>
 </body>
 </html>
