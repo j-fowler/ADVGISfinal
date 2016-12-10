@@ -25,16 +25,6 @@
       padding: 0;
     }
   </style>
-<<<<<<< HEAD
-
-</head>
-<body>
-Welcome to our interactive water resources map for North Carolina! </br>
-This demo version shows the Neuse River Basin complete with its stream network and USGS gaging stations. </br>
-Click on one of the stream segments or USGS station icons to bring up details about the feature. </br>
-    <div id="map"></div>
-
-=======
 <style>
   .label {
     font-weight: 700;
@@ -57,29 +47,18 @@ This demo version shows the all of the North Carolina river basins complete with
 Map Tips:</br>
 Zoom in on a watershed of interest until streams and USGS gages pop up (zoom slow).</br>
 Click on one of the stream segments or USGS station icons to bring up details about the feature. </br>
->>>>>>> refs/remotes/origin/All-watersheds
     <script>
         var map = L.map('map', {
           center: [36.00, -78.94],
           zoom: 7
         });
 		
-<<<<<<< HEAD
-        var esriImagery = L.esri.basemapLayer('Streets').addTo(map);
-		
-        var USGSgages = L.esri.featureLayer({
-		url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Environment/FeatureServer/3',
-		where: "HUCODE = '03020201'",
-		minZoom: 10,
-		maxZoom: 13,
-=======
         var esriImagery = L.esri.basemapLayer('Topographic').addTo(map);
 		
         var USGSgages = L.esri.featureLayer({
 		url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Environment/FeatureServer/3',
 		//where: "HUCODE = '03020201'",
 		minZoom: 9,
->>>>>>> refs/remotes/origin/All-watersheds
 		}).addTo(map);
 		
         USGSgages.bindPopup(function(feature) {
@@ -88,16 +67,6 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 
 		var ncwatersheds = L.esri.featureLayer({
 			url: 'https://services.nconemap.gov/secure/rest/services/NC1Map_Watersheds/FeatureServer/0',
-<<<<<<< HEAD
-			maxZoom: 12,
-			simplifyFactor: 0.35,
-			precision: 5,
-			//fields: ['BASIN'],
-			style: {
-			color: '#A9A9A9',
-			weight: 1
-			}
-=======
 			maxZoom: 10,
 			simplifyFactor: 1,
 			precision: 2,
@@ -112,7 +81,6 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 			//color: '#A9A9A9',
 			//weight: 1
 			//}
->>>>>>> refs/remotes/origin/All-watersheds
 			//where: "BASIN = 'Neuse'",
 			//style:'opacity:0.5',
 		}).addTo(map);
@@ -127,9 +95,6 @@ Click on one of the stream segments or USGS station icons to bring up details ab
             return L.Util.template('<p>{AU_NAME}<br>{AU_DESCRIP}<br>{O_USR}</p>', feature.properties);
         });   
 		
-<<<<<<< HEAD
-		    
-=======
 		var labels = {};
 
 		ncwatersheds.on('createfeature', function(e){
@@ -152,7 +117,6 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 				label.addTo(map);
 			}
 		});    
->>>>>>> refs/remotes/origin/All-watersheds
     </script>
 </body>
 </html>
