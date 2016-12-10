@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Leaflet Map with a Feature Layer</title>  
+  <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+
+  <!-- Load Leaflet from CDN-->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@0.7.7/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@0.7.7/dist/leaflet.js"></script>
+
+  <!-- Load Esri Leaflet from CDN -->
+  <script src="https://cdn.jsdelivr.net/leaflet.esri/1.0.4/esri-leaflet.js"></script>
+
+  <!-- Load Esri Leaflet Renderers from CDN -->
+  <script src="https://cdn.jsdelivr.net/leaflet.esri.renderers/1.0.1/esri-leaflet-renderers.js"></script>  
+
+  <style>
+    html,
+    body,
+    #map {
+      height: 100%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+
+</head>
+<body>
+Welcome to our interactive water resources map for North Carolina! </br>
+This demo version shows the Neuse River Basin complete with its stream network and USGS gaging stations. </br>
+Click on one of the stream segments or USGS station icons to bring up details about the feature. </br>
+    <div id="map"></div>
+
+    <script>
+        var map = L.map('map', {
+          center: [36.00, -78.94],
+          zoom: 7
+        });
+		
+        var esriImagery = L.esri.basemapLayer('Streets').addTo(map);
+		
+        var USGSgages = L.esri.featureLayer({
+		url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Environment/FeatureServer/3',
+		where: "HUCODE = '03020201'",
+		minZoom: 10,
+		maxZoom: 13,
+		}).addTo(map);
+		
+        USGSgages.bindPopup(function(feature) {
+            return L.Util.template('<p>{SITE_NAME}<br>{COUNTY}</p>', feature.properties);
+        });
+
+		var ncwatersheds = L.esri.featureLayer({
+			url: 'https://services.nconemap.gov/secure/rest/services/NC1Map_Watersheds/FeatureServer/0',
+			maxZoom: 12,
+			simplifyFactor: 0.35,
+			precision: 5,
+			//fields: ['BASIN'],
+			style: {
+			color: '#A9A9A9',
+			weight: 1
+			}
+			//where: "BASIN = 'Neuse'",
+			//style:'opacity:0.5',
+		}).addTo(map);
+		
+		var streams = L.esri.featureLayer({url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Water_Quality/FeatureServer/0',
+		where: "NC_BASIN = 'NEU'",
+		minZoom: 10,
+		maxZoom: 13,
+		}).addTo(map);
+		
+		streams.bindPopup(function(feature) {
+            return L.Util.template('<p>{AU_NAME}<br>{AU_DESCRIP}<br>{O_USR}</p>', feature.properties);
+        });   
+		
+		    
+    </script>
+</body>
+</html>
