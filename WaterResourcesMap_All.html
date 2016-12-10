@@ -36,7 +36,7 @@ Click on one of the stream segments or USGS station icons to bring up details ab
     <script>
         var map = L.map('map', {
           center: [36.00, -78.94],
-          zoom: 10
+          zoom: 5
         });
 		
         var esriImagery = L.esri.basemapLayer('Streets').addTo(map);
@@ -52,13 +52,14 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 
 		var ncwatersheds = L.esri.featureLayer({
 			url: 'https://services.nconemap.gov/secure/rest/services/NC1Map_Watersheds/FeatureServer/0',
-			maxZoom: 11,
-			where: "BASIN = 'Neuse'",
+			maxZoom: 12,
+			//where: "BASIN = 'Neuse'",
 			style:'opacity:0.5',
 		}).addTo(map);
 		
 		var streams = L.esri.featureLayer({url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Water_Quality/FeatureServer/0',
 		where: "NC_BASIN = 'NEU'",
+		minZoom: 10,
 		maxZoom: 13,
 		}).addTo(map);
 		
