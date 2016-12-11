@@ -14,7 +14,8 @@
 
   <!-- Load Esri Leaflet Renderers from CDN -->
   <script src="https://cdn.jsdelivr.net/leaflet.esri.renderers/1.0.1/esri-leaflet-renderers.js"></script>  
-
+  <!-- Load in the D3 graphs-->
+  <script src="http://d3js.org/d3.v3.min.js"></script>
   <style>
     html,
     body,
@@ -24,6 +25,18 @@
       margin: 0;
       padding: 0;
     }
+	
+	div.tooltip {   
+			position: absolute;           
+			text-align: center;           
+			width: 60px;                  
+			height: 28px;                 
+			padding: 2px;             
+			font: 12px sans-serif;        
+			background: lightsteelblue;   
+			border: 0px;      
+			border-radius: 8px;           
+			pointer-events: none; 
   </style>
 
 </head>
@@ -49,7 +62,21 @@ Click on one of the stream segments or USGS station icons to bring up details ab
         USGSgages.bindPopup(function(feature) {
             return L.Util.template('<p>{SITE_NAME}<br>{COUNTY}</p>', feature.properties);
         });
-
+			
+		var div = d3.select("body").append("div")   
+			.attr("class", "tooltip")               
+			.style("opacity", 0);	
+		var div = []
+		d3.csv("PrecipitationData1.csv", function(data) {
+		dataset = data.map(function(d) { return [ +d["datetime"], +d["90718_00045_cd"] ]; });
+		console.log(div)
+		});
+		
+		//USGSgagesdata.bindPopup(function(feature) {
+        //   return L.Util.template('<p>{datetime}<br>{90718_00045_cd}</p>', feature.properties);
+        //});
+		
+		
 		var ncwatersheds = L.esri.featureLayer({
 			url: 'https://services.nconemap.gov/secure/rest/services/NC1Map_Watersheds/FeatureServer/0',
 			maxZoom: 11,
