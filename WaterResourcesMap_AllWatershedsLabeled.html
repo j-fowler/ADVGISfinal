@@ -19,7 +19,7 @@
     html,
     body,
     #map {
-      height: 100%;
+      height: 95%;
       width: 100%;
       margin: 0;
       padding: 0;
@@ -86,7 +86,7 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 		}).addTo(map);
 		
 		var streams = L.esri.featureLayer({url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Water_Quality/FeatureServer/0',
-		where: "NC_BASIN = 'NEU'",
+		//where: "NC_BASIN = 'NEU'",
 		minZoom: 10,
 		maxZoom: 13,
 		}).addTo(map);

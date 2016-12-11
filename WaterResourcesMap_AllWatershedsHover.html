@@ -16,9 +16,15 @@
   <!-- Load Esri Leaflet Renderers from CDN -->
   <script src="https://cdn.jsdelivr.net/leaflet.esri.renderers/1.0.1/esri-leaflet-renderers.js"></script>
 
-   <style>
-    body { margin:0; padding:0; }
-    #map { position: absolute; top:0; bottom:0; right:0; left:0; }
+    <style>
+    html,
+    body,
+    #map {
+      height: 95%;
+      width: 100%;
+      margin: 0;
+      padding: 0;
+    }
   </style>
 </head>
 <body>
@@ -37,7 +43,8 @@ This demo version shows the all of the North Carolina river basins complete with
 	<div id="map"></div>
 	<div id="info-pane" class="leaflet-bar"></div>
 Map Tips:</br>
-Zoom in on a watershed of interest until streams and USGS gages pop up (zoom slow).</br>
+Hover over watersheds, the river basin name will appear in the box on the upper left-hand corner</br>
+Zoom in on a watershed of interest until streams and USGS gages pop up.</br>
 Click on one of the stream segments or USGS station icons to bring up details about the feature. </br>
     <script>
         var map = L.map('map', {
@@ -79,7 +86,8 @@ Click on one of the stream segments or USGS station icons to bring up details ab
 	
 		
 		var streams = L.esri.featureLayer({url: 'http://services.nconemap.gov/arcgis/rest/services/NC1Map_Water_Quality/FeatureServer/0',
-		where: "NC_BASIN = 'NEU'",
+		//where: "NC_BASIN = 'NEU'",
+		simplifyFactor: 1,
 		minZoom: 10,
 		maxZoom: 13,
 		}).addTo(map);
